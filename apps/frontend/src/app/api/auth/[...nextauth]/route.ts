@@ -26,7 +26,7 @@ const authOptions = {
 
           if (user && access_token) {
             return {
-              id: user.id,
+              id: user.id.toString(), // Garantir que seja string
               email: user.email,
               name: user.name,
               accessToken: access_token,
@@ -44,11 +44,13 @@ const authOptions = {
     jwt: async ({ token, user }: { token: any; user: any }) => {
       if (user) {
         token.accessToken = (user as { accessToken: string }).accessToken
+        token.id = user.id // Adicionar ID ao token
       }
       return token
     },
     session: async ({ session, token }: { session: any; token: any }) => {
       session.accessToken = token.accessToken
+      session.user.id = token.id // Adicionar ID à sessão
       return session
     },
   },
