@@ -83,11 +83,12 @@ export class AuthService {
     }
   }
 
-  async validateUser(userId: number): Promise<User> {
+  async validateUser(userId: number): Promise<Omit<User, 'password'>> {
     const user = await this.userRepository.findOne({ where: { id: userId } })
     if (!user) {
       throw new UnauthorizedException('User not found')
     }
-    return user
+    const { password, ...userWithoutPassword } = user
+    return userWithoutPassword
   }
 }

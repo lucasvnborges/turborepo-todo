@@ -18,6 +18,7 @@ async function bootstrap() {
     .setDescription('API para gerenciar tarefas')
     .setVersion('1.0')
     .addTag('auth')
+    .addTag('user')
     .addBearerAuth()
     .build()
 
