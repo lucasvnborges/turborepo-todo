@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BullModule } from '@nestjs/bull';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { BullModule } from '@nestjs/bull'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { AuthModule } from './auth/auth.module'
+import { User } from './entities/user.entity'
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { AppService } from './app.service';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'todo_db',
-      autoLoadEntities: true,
+      entities: [User],
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     BullModule.forRoot({
@@ -26,6 +28,7 @@ import { AppService } from './app.service';
         port: parseInt(process.env.REDIS_PORT ?? '6379'),
       },
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
