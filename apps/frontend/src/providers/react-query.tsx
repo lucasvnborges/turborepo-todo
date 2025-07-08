@@ -14,7 +14,13 @@ export default function ReactQueryProvider({
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000,
+            staleTime: 5 * 60 * 1000, // 5 minutos
+            gcTime: 10 * 60 * 1000, // 10 minutos (anteriormente cacheTime)
+            retry: 1,
+            refetchOnWindowFocus: false, // Evitar refetch desnecessário
+            refetchOnMount: false, // Evitar refetch no mount se dados estão fresh
+          },
+          mutations: {
             retry: 1,
           },
         },
