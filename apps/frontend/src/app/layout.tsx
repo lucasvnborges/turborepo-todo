@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import ReactQueryProvider from '@/providers/react-query'
 import { AuthProvider } from '@/providers/auth-provider'
+import { WebSocketProvider } from '@/providers/websocket-provider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,7 +33,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ReactQueryProvider>
-            {children}
+            <WebSocketProvider>
+              {children}
+            </WebSocketProvider>
           </ReactQueryProvider>
         </AuthProvider>
       </body>
