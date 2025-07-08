@@ -45,7 +45,10 @@ export class TodosController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Listar todas as tarefas do usuário' })
+  @ApiOperation({ 
+    summary: 'Listar todas as tarefas do usuário',
+    description: 'Retorna todas as tarefas do usuário logado. Utiliza cache Redis para melhor performance.'
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de tarefas do usuário',
