@@ -1,51 +1,20 @@
 import { Controller, Logger } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { Server } from 'socket.io'
-import {
-  WebSocketGateway,
-  WebSocketServer,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  SubscribeMessage,
-} from '@nestjs/websockets'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { CreateNotificationDto } from '../dto/notification.dto'
 import { Notification } from '../entities/notification.entity'
-import { Socket } from 'socket.io'
+import { NotificationsGateway } from './notifications.gateway'
 
 @Controller()
-@WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
-})
-export class NotificationsController
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+export class NotificationsController {
   private readonly logger = new Logger(NotificationsController.name)
-
-  @WebSocketServer()
-  server: Server
 
   constructor(
     @InjectRepository(Notification)
     private notificationRepository: Repository<Notification>,
+    private notificationsGateway: NotificationsGateway,
   ) {}
-
-  handleConnection(client: Socket) {
-    this.logger.log(`Cliente conectado: ${client.id}`)
-  }
-
-  handleDisconnect(client: Socket) {
-    this.logger.log(`Cliente desconectado: ${client.id}`)
-  }
-
-  @SubscribeMessage('join-user-room')
-  handleJoinUserRoom(client: Socket, userId: number) {
-    client.join(`user-${userId}`)
-    this.logger.log(`Cliente ${client.id} entrou na sala do usuário ${userId}`)
-  }
 
   @MessagePattern('process-notification')
   async handleNotification(@Payload() notification: CreateNotificationDto) {
@@ -85,13 +54,21 @@ export class NotificationsController
   }
 
   private async sendRealTimeNotification(notification: CreateNotificationDto) {
-    // Enviar via WebSocket para o usuário específico
-    this.server.to(`user-${notification.userId}`).emit('notification', {
-      todoId: notification.todoId,
-      type: notification.type,
-      title: notification.title,
-      message: notification.message,
-      timestamp: new Date().toISOString(),
-    })
+    const success = this.notificationsGateway.emitNotificationToUser(
+      notification.userId,
+      {
+        todoId: notification.todoId,
+        type: notification.type,
+        title: notification.title,
+        message: notification.message,
+        timestamp: new Date().toISOString(),
+      },
+    )
+
+    if (!success) {
+      this.logger.warn(
+        'Não foi possível enviar notificação via WebSocket. Apenas salva no banco.',
+      )
+    }
   }
 }
