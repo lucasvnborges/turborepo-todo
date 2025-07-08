@@ -10,6 +10,7 @@ import { Notification } from './entities/notification.entity'
 import { UserModule } from './user/user.module'
 import { TodosModule } from './todos/todos.module'
 import { NotificationsModule } from './notifications/notifications.module'
+import { CacheModule } from './cache/cache.module'
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { NotificationsModule } from './notifications/notifications.module'
     UserModule,
     TodosModule,
     NotificationsModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],
