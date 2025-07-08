@@ -23,11 +23,12 @@ async function bootstrap() {
   // Configuração do Swagger
   const config = new DocumentBuilder()
     .setTitle('Todo API')
-    .setDescription('API para gerenciar tarefas')
+    .setDescription('API para gerenciar tarefas com cache Redis')
     .setVersion('1.0')
-    .addTag('auth')
-    .addTag('user')
-    .addTag('todos')
+    .addTag('auth', 'Endpoints de autenticação')
+    .addTag('user', 'Endpoints de usuário')
+    .addTag('todos', 'Endpoints de tarefas')
+    .addTag('cache', 'Endpoints para gerenciar e monitorar cache Redis')
     .addBearerAuth()
     .build()
 
