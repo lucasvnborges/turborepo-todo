@@ -6,19 +6,20 @@ import { AppModule } from './app.module'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
-  // Enable CORS
+  // Habilitar CORS
   app.enableCors()
 
-  // Global validation pipe
+  // Pipe de validação global
   app.useGlobalPipes(new ValidationPipe())
 
-  // Swagger configuration
+  // Configuração do Swagger
   const config = new DocumentBuilder()
     .setTitle('Todo API')
     .setDescription('API para gerenciar tarefas')
     .setVersion('1.0')
     .addTag('auth')
     .addTag('user')
+    .addTag('todos')
     .addBearerAuth()
     .build()
 
