@@ -54,6 +54,15 @@ export function TodoModal({
     }
   }, [todo, form])
 
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => {
+        const titleInput = document.getElementById('title') as HTMLInputElement
+        titleInput?.focus()
+      }, 100)
+    }
+  }, [open])
+
   const handleSubmit = (data: TodoFormData) => {
     onSubmit(data)
     onOpenChange(false)
@@ -67,7 +76,7 @@ export function TodoModal({
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-slate-900">
-            {todo ? 'Editar Tarefa' : 'Nova Tarefa'}
+            {todo ? 'Editar tarefa' : 'Nova tarefa'}
           </h2>
           <Button
             variant="ghost"
@@ -83,8 +92,8 @@ export function TodoModal({
           <FormField
             id="title"
             label="Título"
-            placeholder="Ex: Revisar apresentação"
             register={form.register('title')}
+            placeholder="Ex: Revisar apresentação"
             error={form.formState.errors.title?.message}
           />
 
