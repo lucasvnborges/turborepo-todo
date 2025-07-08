@@ -10,7 +10,7 @@ export const api = axios.create({
 
 // Request interceptor para adicionar token de autenticação
 api.interceptors.request.use(
-  (config) => {
+  config => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token')
       if (token) {
@@ -19,19 +19,19 @@ api.interceptors.request.use(
     }
     return config
   },
-  (error) => {
+  error => {
     return Promise.reject(error)
-  }
+  },
 )
 
 // Response interceptor para tratar erros
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('token')
       window.location.href = '/login'
     }
     return Promise.reject(error)
-  }
-) 
+  },
+)
