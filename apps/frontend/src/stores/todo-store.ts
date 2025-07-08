@@ -53,7 +53,7 @@ export const useTodoStore = create<TodoState>()(
     // Operações otimistas
     optimisticCreate: todo =>
       set(state => ({
-        todos: [...state.todos, todo],
+        todos: [todo, ...state.todos],
       })),
 
     optimisticUpdate: (id, data) =>
@@ -94,7 +94,9 @@ export const useTodoStore = create<TodoState>()(
 
     rollbackDelete: deletedTodo =>
       set(state => ({
-        todos: [...state.todos, deletedTodo].sort((a, b) => a.id - b.id),
+        todos: [...state.todos, deletedTodo].sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ),
       })),
   })),
 )

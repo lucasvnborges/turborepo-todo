@@ -11,11 +11,28 @@ export function useDashboardLogic(todos: ITodo[]) {
   const { createTodo, updateTodo, deleteTodo } = useOptimisticTodos()
 
   const filteredTodos = useMemo(() => {
-    return todos.filter(todo => {
+    const filtered = todos.filter(todo => {
       if (filter === 'pending') return todo.status === 'pending'
       if (filter === 'completed') return todo.status === 'completed'
       return true
     })
+
+    if (filter === 'all') {
+      // Na aba "Todas", mostrar pendentes primeiro, depois concluídas
+      // Dentro de cada grupo, ordenar por data de criação (mais recente primeiro)
+      const pending = filtered
+        .filter(todo => todo.status === 'pending')
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      
+      const completed = filtered
+        .filter(todo => todo.status === 'completed')
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      
+      return [...pending, ...completed]
+    }
+
+    // Para abas específicas (pending/completed), ordenar por data de criação
+    return filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   }, [todos, filter])
 
   const stats = useMemo(
