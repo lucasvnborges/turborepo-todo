@@ -8,10 +8,10 @@ export class CreateTodoDto {
   @IsNotEmpty()
   title: string
 
-  @ApiProperty({ example: 'Lavar todos os pratos e copos que estão na pia' })
+  @ApiProperty({ example: 'Lavar todos os pratos e copos que estão na pia', required: false })
   @IsString()
-  @IsNotEmpty()
-  description: string
+  @IsOptional()
+  description?: string
 }
 
 export class UpdateTodoDto {

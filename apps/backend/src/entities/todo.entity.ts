@@ -22,7 +22,7 @@ export class Todo {
   @Column()
   title: string
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string
 
   @Column({
