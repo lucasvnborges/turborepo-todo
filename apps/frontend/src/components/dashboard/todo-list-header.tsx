@@ -31,7 +31,7 @@ export function TodoListHeader({
             className="border-green-200 text-green-700 hover:bg-green-50"
           >
             <CheckSquare className="w-4 h-4 mr-2" />
-            Marcar Todas como Concluídas
+            Concluir todas
           </Button>
         )}
         <Button
@@ -39,7 +39,7 @@ export function TodoListHeader({
           className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           <Plus className="w-4 h-4 mr-2" />
-          Nova Tarefa
+          Nova tarefa
         </Button>
       </div>
     </div>
