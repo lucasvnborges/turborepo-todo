@@ -30,7 +30,10 @@ export class CreateNotificationDto {
   @ApiProperty({ example: 1 })
   todoId: number
 
-  @ApiProperty({ example: 'TODO_CREATED' })
+  @ApiProperty({ 
+    example: 'TODO_CREATED',
+    enum: ['TODO_CREATED', 'TODO_COMPLETED', 'TODO_UPDATED', 'TODO_DELETED']
+  })
   type: string
 
   @ApiProperty({ example: 'Nova tarefa criada' })
@@ -40,4 +43,12 @@ export class CreateNotificationDto {
     example: 'Sua tarefa "Lavar a louça" foi criada com sucesso!',
   })
   message: string
+}
+
+export class NotificationStatsDto {
+  @ApiProperty()
+  connectedUsers: number
+
+  @ApiProperty()
+  totalRooms: number
 }

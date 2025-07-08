@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { CreateNotificationDto } from '../dto/notification.dto'
 import { Notification } from '../entities/notification.entity'
-import { NotificationsGateway } from './notifications.gateway'
 
 @Controller()
 export class NotificationsController {
@@ -13,27 +12,22 @@ export class NotificationsController {
   constructor(
     @InjectRepository(Notification)
     private notificationRepository: Repository<Notification>,
-    private notificationsGateway: NotificationsGateway,
   ) {}
 
   @MessagePattern('process-notification')
   async handleNotification(@Payload() notification: CreateNotificationDto) {
-    this.logger.log(`Processando notificação: ${JSON.stringify(notification)}`)
+    this.logger.log(`💾 Salvando notificação no banco: ${notification.title}`)
 
     try {
-      // 1. Salvar notificação no banco de dados
       await this.saveNotificationToDatabase(notification)
 
-      // 2. Enviar notificação em tempo real via WebSocket
-      await this.sendRealTimeNotification(notification)
-
       this.logger.log(
-        `Notificação processada com sucesso para o usuário ${notification.userId}`,
+        `✅ Notificação salva no banco para usuário ${notification.userId}`,
       )
 
-      return { success: true, message: 'Notificação processada com sucesso' }
+      return { success: true, message: 'Notificação salva com sucesso' }
     } catch (error) {
-      this.logger.error(`Erro ao processar notificação: ${error.message}`)
+      this.logger.error(`❌ Erro ao salvar notificação: ${error.message}`)
       throw error
     }
   }
@@ -51,24 +45,5 @@ export class NotificationsController {
     })
 
     return await this.notificationRepository.save(newNotification)
-  }
-
-  private async sendRealTimeNotification(notification: CreateNotificationDto) {
-    const success = this.notificationsGateway.emitNotificationToUser(
-      notification.userId,
-      {
-        todoId: notification.todoId,
-        type: notification.type,
-        title: notification.title,
-        message: notification.message,
-        timestamp: new Date().toISOString(),
-      },
-    )
-
-    if (!success) {
-      this.logger.warn(
-        'Não foi possível enviar notificação via WebSocket. Apenas salva no banco.',
-      )
-    }
   }
 }
