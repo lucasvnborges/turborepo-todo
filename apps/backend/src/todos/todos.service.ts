@@ -1,14 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { Todo } from '../entities/todo.entity'
+import { Todo, TodoStatus } from '../entities/todo.entity'
 import { CreateTodoDto, UpdateTodoDto } from '../dto/todo.dto'
+import { NotificationsService } from '../notifications/notifications.service'
 
 @Injectable()
 export class TodosService {
   constructor(
     @InjectRepository(Todo)
     private todoRepository: Repository<Todo>,
+    private notificationsService: NotificationsService,
   ) {}
 
   async create(createTodoDto: CreateTodoDto, userId: number): Promise<Todo> {
@@ -17,7 +19,12 @@ export class TodosService {
       userId,
     })
 
-    return await this.todoRepository.save(todo)
+    const savedTodo = await this.todoRepository.save(todo)
+
+    // Enviar notificação de tarefa criada
+    await this.notificationsService.sendTodoCreatedNotification(savedTodo, userId)
+
+    return savedTodo
   }
 
   async findAll(userId: number): Promise<Todo[]> {
@@ -45,10 +52,18 @@ export class TodosService {
     userId: number,
   ): Promise<Todo> {
     const todo = await this.findOne(id, userId)
+    const previousStatus = todo.status
 
     Object.assign(todo, updateTodoDto)
 
-    return await this.todoRepository.save(todo)
+    const updatedTodo = await this.todoRepository.save(todo)
+
+    // Enviar notificação se a tarefa foi marcada como concluída
+    if (previousStatus !== TodoStatus.COMPLETED && updatedTodo.status === TodoStatus.COMPLETED) {
+      await this.notificationsService.sendTodoCompletedNotification(updatedTodo, userId)
+    }
+
+    return updatedTodo
   }
 
   async remove(id: number, userId: number): Promise<void> {
