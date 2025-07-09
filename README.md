@@ -25,12 +25,11 @@ Uma aplicação moderna de gerenciamento de tarefas construída com arquitetura 
 - **TypeORM 0.3.25** - ORM para TypeScript/JavaScript
 - **PostgreSQL** - Banco de dados relacional
 - **Redis 4.7.1** - Cache e armazenamento de sessões
-- **RabbitMQ** - Sistema de mensageria
+- **RabbitMQ** - Sistema de mensageria para notificações
 - **JWT** - Autenticação por tokens
 - **Passport.js** - Middleware de autenticação
 - **Socket.io** - WebSockets para tempo real
 - **Swagger** - Documentação da API
-- **Bull** - Processamento de filas
 - **bcryptjs** - Hash de senhas
 
 ### Infraestrutura
