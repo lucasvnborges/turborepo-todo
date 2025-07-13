@@ -1,4 +1,4 @@
-# Todo App - Aplicação de Gerenciamento de Tarefas
+# Todo App - Aplicação para gerenciamento de tarefas
 
 Uma aplicação moderna de gerenciamento de tarefas construída com arquitetura de monorepo usando Turborepo, Next.js e NestJS.
 
