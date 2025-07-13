@@ -1,6 +1,6 @@
 # Todo App - Aplicação para gerenciamento de tarefas
 
-Uma aplicação moderna de gerenciamento de tarefas construída com arquitetura de monorepo usando Turborepo, Next.js e NestJS.
+Uma aplicação moderna para gerenciamento de tarefas construída com arquitetura de monorepo usando Turborepo, Next.js e NestJS.
 
 ## 🛠️ Tecnologias Utilizadas
 
